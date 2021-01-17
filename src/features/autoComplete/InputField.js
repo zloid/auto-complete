@@ -3,53 +3,67 @@ import axios from 'axios'
 
 export const InputField = () => {
     const [inputText, setInputText] = useState('')
-    const [testData, setTestData] = useState('nothing')
+    /* const [arrayOfNames, setArrayOfNames] = useState([
+        'Leanne Graham',
+        'Ervin Howell',
+        'Clementine Bauch',
+        'Patricia Lebsack',
+        'Chelsey Dietrich',
+        'Mrs. Dennis Schulist',
+        'Kurtis Weissnat',
+        'Nicholas Runolfsdottir V',
+        'Glenna Reichert',
+        'Clementina DuBuque',
+        'Edfslkj',
+        'Erlkjfd',
+        'eee',
+        'Lsdaf',
+        'lell',
+    ]) */
+    const [arrApiNames, setArrApiNames] = useState(['testName'])
 
     const getUserNamesFromApi = async () => {
         const response = await axios.get(
             'https://jsonplaceholder.typicode.com/users'
         )
-        const someArray = response.data.map(({ name }) => name)
-        console.log(someArray)
+        const arrayOfApiNames = response.data.map(({ name }) => name)
+        console.log(arrayOfApiNames)
 
-        // setTestData(someArray[Math.floor(Math.random() * someArray.length)])
-
-        // const someName = someArray[Math.floor(Math.random() * someArray.length)]
-        // const someNameFirstChar = someName[0]
-        /* 
-        if (someNameFirstChar === inputText[0]) {
-            setTestData(someName)
-        } else {
-            setTestData('nothing')
-        }
- */
-
-        for (let i = 0; i < someArray.length; i++) {
-            if (
-                someArray[i].substr(0, inputText.length).toLowerCase() ===
-                inputText.toLowerCase()
-            ) {
-                setTestData(someArray[i])
-            } else {
-                setTestData('nothing')
-            }
-        }
+        setArrApiNames(arrayOfApiNames)
     }
-    /* 
-    useEffect(() => {
-        getUserNamesFromApi()
-    }) */
-
     const changeInputValue = (e) => {
-        setInputText(e.target.value)
         getUserNamesFromApi()
+        setInputText(e.target.value)
     }
 
     return (
         <div>
             <input value={inputText} onChange={changeInputValue} />
-            <p>{testData}</p>
-            <p>{inputText}</p>
+            <p>inputText: {inputText}</p>
+            <p>inputText.length: {inputText.length}</p>
+            {/* <p>
+                arrayOfNames:{' '}
+                {arrayOfNames
+                    .filter(
+                        (name) =>
+                            name.slice(0, inputText.length).toLowerCase() ===
+                            inputText.toLowerCase()
+                    )
+                    .join(', ')}
+            </p> */}
+            <hr />
+            <p>
+                <u>arrApiNames:</u>{' '}
+                {inputText.length > 0 &&
+                    arrApiNames
+                        .filter(
+                            (name) =>
+                                name
+                                    .slice(0, inputText.length)
+                                    .toLowerCase() === inputText.toLowerCase()
+                        )
+                        .join(', ')}
+            </p>
         </div>
     )
 }
