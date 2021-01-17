@@ -1,17 +1,16 @@
 import axios from 'axios'
 
 const GET_CURRENT_USER_SUCCESS = 'GET_CURRENT_USER_SUCCESS'
+const GET_LENGTH_STRING_FROM_INPUT = 'GET_LENGTH_STRING_FROM_INPUT'
 
 // const GET_CURRENT_USER_FAILURE = 'GET_CURRENT_USER_FAILURE'
 
-/* export function fetchArticleDetails() {
-  return function(dispatch) {
-    return axios.get("https://api.myjson.com/bins/19dtxc")
-      .then(({ data }) => {
-      dispatch(setArticleDetails(data));
-    });
-  };
-} */
+export function getCurrentLengthOfString(lengthOfString) {
+    return {
+        type: GET_LENGTH_STRING_FROM_INPUT,
+        payload: lengthOfString,
+    }
+}
 
 export function fetchUsers() {
     return (dispatch) => {
@@ -29,28 +28,21 @@ export function fetchUsers() {
 export default function autoCompleteReducer(state = {}, action) {
     switch (action.type) {
         case GET_CURRENT_USER_SUCCESS:
-            return { ...state, allNamesFromApi: action.allNamesFromApi }
+            return {
+                ...state,
+                allNamesFromApi: state.lengthOfInputString.length > 0 && action.allNamesFromApi
+                    .filter(
+                        (name) =>
+                            name
+                                .slice(0, state.lengthOfInputString.length)
+                                .toLowerCase() ===
+                            state.lengthOfInputString.toLowerCase()
+                    )
+                    .join(', '),
+            }
+        case GET_LENGTH_STRING_FROM_INPUT:
+            return { ...state, lengthOfInputString: action.payload }
         default:
             return state
     }
 }
-
-/*
-const GET_CURRENT_USER = 'GET_CURRENT_USER';
-const GET_CURRENT_USER_SUCCESS = 'GET_CURRENT_USER_SUCCESS';
-const GET_CURRENT_USER_FAILURE = 'GET_CURRENT_USER_FAILURE';
-
-
-const LOAD_USERS_LOADING = 'LOAD_USERS_LOADING'
-const LOAD_USERS_SUCCESS = 'LOAD_USERS_SUCCESS'
-const LOAD_USERS_ERROR = 'LOAD_USERS_ERROR'
-
-const getUser = () => {
-  return (dispatch) => {
-    dispatch({ type: GET_CURRENT_USER });
-    return axios.get('/api/auth/user').then(  
-      user => dispatch({ type: GET_CURRENT_USER_SUCCESS, user }),
-      err => dispatch({ type: GET_CURRENT_USER_FAILURE, err })
-    );
-  };
-}; */

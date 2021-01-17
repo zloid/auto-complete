@@ -1,29 +1,14 @@
 import React, { useState } from 'react'
-// import axios from 'axios'
 import { connect } from 'react-redux'
+import { fetchUsers, getCurrentLengthOfString } from './autoCompleteSlice'
 
-import store from '../../app/store'
-import { fetchUsers } from './autoCompleteSlice'
-
-const InputField = ({ allNamesFromApi, fetchUsers }) => {
+const InputField = ({ allNamesFromApi, fetchUsers, getCurrentLengthOfString }) => {
     const [inputText, setInputText] = useState('')
-    // const [arrayOfApiNames, setArrayOfApiNames] = useState('')
-
-    // const getUserNamesFromApi = async () => {
-    // const response = await axios.get(
-    // 'https://jsonplaceholder.typicode.com/users'
-    // )
-    // const arrayOfApiNames = response.data.map(({ name }) => name)
-    // console.log(arrayOfApiNames)
-    // setArrayOfApiNames(arrayOfApiNames)
-    // }
 
     const changeInputValue = (e) => {
-        // getUserNamesFromApi()
         setInputText(e.target.value)
-        // store.dispatch(fetchUsers())
+        getCurrentLengthOfString(e.target.value)
         fetchUsers()
-        // setArrayOfApiNames(allNamesFromApi)
     }
 
     return (
@@ -47,7 +32,8 @@ const InputField = ({ allNamesFromApi, fetchUsers }) => {
                         .join(', ')}
             </p> */}
             <hr />
-            <u>{inputText.length > 0 && allNamesFromApi}</u>
+            {/* <u>{inputText.length > 0 && allNamesFromApi}</u> */}
+            <u>{inputText.length > 0 &&  allNamesFromApi}</u>
         </div>
     )
 }
@@ -57,7 +43,8 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-    fetchUsers: () => dispatch(fetchUsers())
+    fetchUsers: () => dispatch(fetchUsers()),
+    getCurrentLengthOfString: (length) => dispatch(getCurrentLengthOfString(length))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(InputField)
