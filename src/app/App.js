@@ -1,5 +1,5 @@
 import React from 'react'
-import { InputField } from '../features/autoComplete/InputField'
+import InputField from '../features/autoComplete/InputField'
 
 const App = () => {
     return (

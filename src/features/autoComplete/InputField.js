@@ -1,61 +1,43 @@
 import React, { useState } from 'react'
-import axios from 'axios'
+// import axios from 'axios'
+import { connect } from 'react-redux'
 
-export const InputField = () => {
+import store from '../../app/store'
+import { fetchUsers } from './autoCompleteSlice'
+
+const InputField = ({ allNamesFromApi, fetchUsers }) => {
     const [inputText, setInputText] = useState('')
-    /* const [arrayOfNames, setArrayOfNames] = useState([
-        'Leanne Graham',
-        'Ervin Howell',
-        'Clementine Bauch',
-        'Patricia Lebsack',
-        'Chelsey Dietrich',
-        'Mrs. Dennis Schulist',
-        'Kurtis Weissnat',
-        'Nicholas Runolfsdottir V',
-        'Glenna Reichert',
-        'Clementina DuBuque',
-        'Edfslkj',
-        'Erlkjfd',
-        'eee',
-        'Lsdaf',
-        'lell',
-    ]) */
-    const [arrApiNames, setArrApiNames] = useState(['testName'])
+    // const [arrayOfApiNames, setArrayOfApiNames] = useState('')
 
-    const getUserNamesFromApi = async () => {
-        const response = await axios.get(
-            'https://jsonplaceholder.typicode.com/users'
-        )
-        const arrayOfApiNames = response.data.map(({ name }) => name)
-        console.log(arrayOfApiNames)
+    // const getUserNamesFromApi = async () => {
+    // const response = await axios.get(
+    // 'https://jsonplaceholder.typicode.com/users'
+    // )
+    // const arrayOfApiNames = response.data.map(({ name }) => name)
+    // console.log(arrayOfApiNames)
+    // setArrayOfApiNames(arrayOfApiNames)
+    // }
 
-        setArrApiNames(arrayOfApiNames)
-    }
     const changeInputValue = (e) => {
-        getUserNamesFromApi()
+        // getUserNamesFromApi()
         setInputText(e.target.value)
+        // store.dispatch(fetchUsers())
+        fetchUsers()
+        // setArrayOfApiNames(allNamesFromApi)
     }
 
     return (
         <div>
-            <input value={inputText} onChange={changeInputValue} />
+            <input type="text" value={inputText} onChange={changeInputValue} />
             <p>inputText: {inputText}</p>
             <p>inputText.length: {inputText.length}</p>
-            {/* <p>
-                arrayOfNames:{' '}
-                {arrayOfNames
-                    .filter(
-                        (name) =>
-                            name.slice(0, inputText.length).toLowerCase() ===
-                            inputText.toLowerCase()
-                    )
-                    .join(', ')}
-            </p> */}
+
             <hr />
-            <p>
-                <u>arrApiNames:</u>{' '}
+            {/* <p>123123: {inputText.length > 0 && arrayOfApiNames}</p> */}
+            {/* <p>
+                <u>arrayOfApiNames:</u>{' '}
                 {inputText.length > 0 &&
-                    arrApiNames
+                    arrayOfApiNames
                         .filter(
                             (name) =>
                                 name
@@ -63,7 +45,19 @@ export const InputField = () => {
                                     .toLowerCase() === inputText.toLowerCase()
                         )
                         .join(', ')}
-            </p>
+            </p> */}
+            <hr />
+            <u>{inputText.length > 0 && allNamesFromApi}</u>
         </div>
     )
 }
+
+const mapStateToProps = (state) => ({
+    allNamesFromApi: state.autoCompleteReducer.allNamesFromApi,
+})
+
+const mapDispatchToProps = (dispatch) => ({
+    fetchUsers: () => dispatch(fetchUsers())
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(InputField)
