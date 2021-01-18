@@ -4,6 +4,8 @@ import { selectNamesEqualToInputString } from './selectNamesEqualToInputString'
 const GET_STRING_FROM_AUTOCOMPLETE_INPUT =
     'autoComplete/GET_STRING_FROM_AUTOCOMPLETE_INPUT'
 const GET_CURRENT_USER_SUCCESS = 'autoComplete/GET_CURRENT_USER_SUCCESS'
+const GET_USER_NAME_FROM_SUCCESS_LIST =
+    'autoComplete/GET_USER_NAME_FROM_SUCCESS_LIST'
 
 // const GET_CURRENT_USER_FAILURE = 'GET_CURRENT_USER_FAILURE'
 
@@ -27,9 +29,17 @@ export function fetchUsers() {
     }
 }
 
+export function getUserNameFromSuccessList(name) {
+    return {
+        type: GET_USER_NAME_FROM_SUCCESS_LIST,
+        payload: name,
+    }
+}
+
 const initialState = {
     selectedNamesFromApi: [],
     stringFromInput: '',
+    userNameFromSuccessList: '',
 }
 
 export default function autoCompleteReducer(state = initialState, action) {
@@ -43,6 +53,11 @@ export default function autoCompleteReducer(state = initialState, action) {
                     state.stringFromInput,
                     action.payload
                 ),
+            }
+        case GET_USER_NAME_FROM_SUCCESS_LIST:
+            return {
+                ...state, 
+                userNameFromSuccessList: action.payload               
             }
         default:
             return state
