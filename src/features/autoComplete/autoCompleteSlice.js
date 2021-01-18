@@ -6,10 +6,10 @@ import { selectNamesEqualToInputString } from './selectNamesEqualToInputString'
 
 const GET_STRING_FROM_AUTOCOMPLETE_INPUT =
     'autoComplete/GET_STRING_FROM_AUTOCOMPLETE_INPUT'
+const REQUEST_CURRENT_USER = 'autoComplete/REQUEST_CURRENT_USER'
 const GET_CURRENT_USER_SUCCESS = 'autoComplete/GET_CURRENT_USER_SUCCESS'
+const GET_CURRENT_USER_FAILURE = 'autoComplete/GET_CURRENT_USER_FAILURE'
 const DELETE_DATA_FROM_API = 'autoComplete/DELETE_DATA_FROM_API'
-
-// const GET_CURRENT_USER_FAILURE = 'GET_CURRENT_USER_FAILURE'
 
 export function getCurrentStringFromInput(StringFromInput) {
     return {
@@ -20,6 +20,9 @@ export function getCurrentStringFromInput(StringFromInput) {
 
 export function fetchUsers() {
     return (dispatch) => {
+        dispatch({
+            type: REQUEST_CURRENT_USER,
+        })
         return axios
             .get('https://jsonplaceholder.typicode.com/users')
             .then((response) => {
@@ -28,6 +31,12 @@ export function fetchUsers() {
                     payload: response.data.map(({ name }) => name),
                 })
             })
+            .catch((response) =>
+                dispatch({
+                    type: GET_CURRENT_USER_FAILURE,
+                    error: response.error,
+                })
+            )
     }
 }
 
@@ -38,12 +47,15 @@ export function deleteDataFromApi() {
 const initialState = {
     selectedNamesFromApi: [],
     stringFromInput: '',
+    isFetching: false,
 }
 
 export default function autoCompleteReducer(state = initialState, action) {
     switch (action.type) {
         case GET_STRING_FROM_AUTOCOMPLETE_INPUT:
             return { ...state, stringFromInput: action.payload }
+        case REQUEST_CURRENT_USER:
+            return { ...state, isFetching: true }
         case GET_CURRENT_USER_SUCCESS:
             return {
                 ...state,
@@ -51,6 +63,12 @@ export default function autoCompleteReducer(state = initialState, action) {
                     state.stringFromInput,
                     action.payload
                 ),
+                isFetching: false,
+            }
+        case GET_CURRENT_USER_FAILURE:
+            return {
+                ...state,
+                selectedNamesFromApi: [action.error],
             }
         case DELETE_DATA_FROM_API:
             return { ...state, selectedNamesFromApi: [] }

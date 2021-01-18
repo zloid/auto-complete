@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
+import { Spinner } from '../../components/Spinner'
 import {
     fetchUsers,
     getCurrentStringFromInput,
@@ -8,6 +9,7 @@ import {
 
 const InputField = ({
     selectedNamesFromApi,
+    isFetching,
     fetchUsers,
     getCurrentStringFromInput,
     deleteDataFromApi,
@@ -15,9 +17,9 @@ const InputField = ({
     const [inputText, setInputText] = useState('')
 
     const changeInputValue = (e) => {
+        fetchUsers()
         setInputText(e.target.value)
         getCurrentStringFromInput(e.target.value)
-        fetchUsers()
     }
 
     const NamesFromApi = ({ selectedNamesFromApi }) => {
@@ -42,8 +44,13 @@ const InputField = ({
 
     return (
         <div>
-            <input type="text" value={inputText} onChange={changeInputValue} />
-
+            <input
+                type="text"
+                value={inputText}
+                onChange={changeInputValue}
+                placeholder="Name"
+            />
+            {isFetching && <Spinner />}
             <NamesFromApi selectedNamesFromApi={selectedNamesFromApi} />
         </div>
     )
@@ -51,7 +58,7 @@ const InputField = ({
 
 const mapStateToProps = (state) => ({
     selectedNamesFromApi: state.autoCompleteReducer.selectedNamesFromApi,
-    userNameFromSuccessList: state.autoCompleteReducer.userNameFromSuccessList,
+    isFetching: state.autoCompleteReducer.isFetching,
 })
 
 const mapDispatchToProps = (dispatch) => ({
