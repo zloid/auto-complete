@@ -1,14 +1,16 @@
 import axios from 'axios'
+import { selectNamesEqualToInputString } from './selectNamesEqualToInputString'
 
-const GET_CURRENT_USER_SUCCESS = 'GET_CURRENT_USER_SUCCESS'
-const GET_LENGTH_STRING_FROM_INPUT = 'GET_LENGTH_STRING_FROM_INPUT'
+const GET_STRING_FROM_AUTOCOMPLETE_INPUT =
+    'autoComplete/GET_STRING_FROM_AUTOCOMPLETE_INPUT'
+const GET_CURRENT_USER_SUCCESS = 'autoComplete/GET_CURRENT_USER_SUCCESS'
 
 // const GET_CURRENT_USER_FAILURE = 'GET_CURRENT_USER_FAILURE'
 
-export function getCurrentLengthOfString(lengthOfString) {
+export function getCurrentStringFromInput(StringFromInput) {
     return {
-        type: GET_LENGTH_STRING_FROM_INPUT,
-        payload: lengthOfString,
+        type: GET_STRING_FROM_AUTOCOMPLETE_INPUT,
+        payload: StringFromInput,
     }
 }
 
@@ -19,29 +21,29 @@ export function fetchUsers() {
             .then((response) => {
                 dispatch({
                     type: GET_CURRENT_USER_SUCCESS,
-                    allNamesFromApi: response.data.map(({ name }) => name),
+                    payload: response.data.map(({ name }) => name),
                 })
             })
     }
 }
 
-export default function autoCompleteReducer(state = {}, action) {
+const initialState = {
+    selectedNamesFromApi: [],
+    stringFromInput: '',
+}
+
+export default function autoCompleteReducer(state = initialState, action) {
     switch (action.type) {
+        case GET_STRING_FROM_AUTOCOMPLETE_INPUT:
+            return { ...state, stringFromInput: action.payload }
         case GET_CURRENT_USER_SUCCESS:
             return {
                 ...state,
-                allNamesFromApi: state.lengthOfInputString.length > 0 && action.allNamesFromApi
-                    .filter(
-                        (name) =>
-                            name
-                                .slice(0, state.lengthOfInputString.length)
-                                .toLowerCase() ===
-                            state.lengthOfInputString.toLowerCase()
-                    )
-                    .join(', '),
+                selectedNamesFromApi: selectNamesEqualToInputString(
+                    state.stringFromInput,
+                    action.payload
+                ),
             }
-        case GET_LENGTH_STRING_FROM_INPUT:
-            return { ...state, lengthOfInputString: action.payload }
         default:
             return state
     }

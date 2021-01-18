@@ -1,50 +1,46 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
-import { fetchUsers, getCurrentLengthOfString } from './autoCompleteSlice'
+import { fetchUsers, getCurrentStringFromInput } from './autoCompleteSlice'
 
-const InputField = ({ allNamesFromApi, fetchUsers, getCurrentLengthOfString }) => {
+const InputField = ({
+    selectedNamesFromApi,
+    fetchUsers,
+    getCurrentStringFromInput,
+}) => {
     const [inputText, setInputText] = useState('')
 
     const changeInputValue = (e) => {
         setInputText(e.target.value)
-        getCurrentLengthOfString(e.target.value)
+        getCurrentStringFromInput(e.target.value)
         fetchUsers()
     }
 
     return (
         <div>
             <input type="text" value={inputText} onChange={changeInputValue} />
-            <p>inputText: {inputText}</p>
-            <p>inputText.length: {inputText.length}</p>
+
+            <ul>
+                {selectedNamesFromApi.map((name) => (
+                    <li key={name}>{name}</li>
+                ))}
+            </ul>
 
             <hr />
-            {/* <p>123123: {inputText.length > 0 && arrayOfApiNames}</p> */}
-            {/* <p>
-                <u>arrayOfApiNames:</u>{' '}
-                {inputText.length > 0 &&
-                    arrayOfApiNames
-                        .filter(
-                            (name) =>
-                                name
-                                    .slice(0, inputText.length)
-                                    .toLowerCase() === inputText.toLowerCase()
-                        )
-                        .join(', ')}
-            </p> */}
+            <p>inputText: {inputText}</p>
+            <p>inputText.length: {inputText.length}</p>
             <hr />
-            {/* <u>{inputText.length > 0 && allNamesFromApi}</u> */}
-            <u>{inputText.length > 0 &&  allNamesFromApi}</u>
         </div>
     )
 }
 
 const mapStateToProps = (state) => ({
-    allNamesFromApi: state.autoCompleteReducer.allNamesFromApi,
+    selectedNamesFromApi: state.autoCompleteReducer.selectedNamesFromApi,
 })
 
 const mapDispatchToProps = (dispatch) => ({
     fetchUsers: () => dispatch(fetchUsers()),
-    getCurrentLengthOfString: (length) => dispatch(getCurrentLengthOfString(length))
+    getCurrentStringFromInput: (StringFromInput) =>
+        dispatch(getCurrentStringFromInput(StringFromInput)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(InputField)
