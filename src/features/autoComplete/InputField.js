@@ -1,13 +1,16 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
-import { fetchUsers, getCurrentStringFromInput } from './autoCompleteSlice'
-// import NamesFromApi from './NamesFromApi/NamesFromApi'
+import {
+    fetchUsers,
+    getCurrentStringFromInput,
+    deleteDataFromApi,
+} from './autoCompleteSlice'
 
 const InputField = ({
     selectedNamesFromApi,
     fetchUsers,
     getCurrentStringFromInput,
-    userNameFromSuccessList,
+    deleteDataFromApi,
 }) => {
     const [inputText, setInputText] = useState('')
 
@@ -22,25 +25,26 @@ const InputField = ({
             <ul>
                 {selectedNamesFromApi.length > 0
                     ? selectedNamesFromApi.map((name, i) => (
-                          <li key={name + i} onClick={() => setInputText(name)}>
+                          <li
+                              key={name + i}
+                              onClick={() => {
+                                  setInputText(name)
+                                  deleteDataFromApi()
+                              }}
+                          >
                               {name}
                           </li>
                       ))
-                    : 'Nothing found...'}
+                    : 'Try write: Clementin, then click on name'}
             </ul>
         )
     }
 
     return (
         <div>
-            {userNameFromSuccessList}
             <input type="text" value={inputText} onChange={changeInputValue} />
-            <NamesFromApi selectedNamesFromApi={selectedNamesFromApi} />
 
-            <hr />
-            <p>inputText: {inputText}</p>
-            <p>inputText.length: {inputText.length}</p>
-            <hr />
+            <NamesFromApi selectedNamesFromApi={selectedNamesFromApi} />
         </div>
     )
 }
@@ -54,6 +58,7 @@ const mapDispatchToProps = (dispatch) => ({
     fetchUsers: () => dispatch(fetchUsers()),
     getCurrentStringFromInput: (StringFromInput) =>
         dispatch(getCurrentStringFromInput(StringFromInput)),
+    deleteDataFromApi: () => dispatch(deleteDataFromApi()),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(InputField)

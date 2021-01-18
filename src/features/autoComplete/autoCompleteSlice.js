@@ -1,11 +1,13 @@
 import axios from 'axios'
 import { selectNamesEqualToInputString } from './selectNamesEqualToInputString'
 
+// pieces below bundled together according to "Redux Ducks" pattern
+// https://github.com/erikras/ducks-modular-redux
+
 const GET_STRING_FROM_AUTOCOMPLETE_INPUT =
     'autoComplete/GET_STRING_FROM_AUTOCOMPLETE_INPUT'
 const GET_CURRENT_USER_SUCCESS = 'autoComplete/GET_CURRENT_USER_SUCCESS'
-const GET_USER_NAME_FROM_SUCCESS_LIST =
-    'autoComplete/GET_USER_NAME_FROM_SUCCESS_LIST'
+const DELETE_DATA_FROM_API = 'autoComplete/DELETE_DATA_FROM_API'
 
 // const GET_CURRENT_USER_FAILURE = 'GET_CURRENT_USER_FAILURE'
 
@@ -29,17 +31,13 @@ export function fetchUsers() {
     }
 }
 
-export function getUserNameFromSuccessList(name) {
-    return {
-        type: GET_USER_NAME_FROM_SUCCESS_LIST,
-        payload: name,
-    }
+export function deleteDataFromApi() {
+    return { type: DELETE_DATA_FROM_API }
 }
 
 const initialState = {
     selectedNamesFromApi: [],
     stringFromInput: '',
-    userNameFromSuccessList: '',
 }
 
 export default function autoCompleteReducer(state = initialState, action) {
@@ -54,11 +52,9 @@ export default function autoCompleteReducer(state = initialState, action) {
                     action.payload
                 ),
             }
-        case GET_USER_NAME_FROM_SUCCESS_LIST:
-            return {
-                ...state, 
-                userNameFromSuccessList: action.payload               
-            }
+        case DELETE_DATA_FROM_API:
+            return { ...state, selectedNamesFromApi: [] }
+
         default:
             return state
     }
