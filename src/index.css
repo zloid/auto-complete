@@ -1,0 +1,33 @@
+ body {
+  font-family: sans-serif;
+  font-size: 22px;
+  text-align: center;
+ }
+ 
+  .search {
+    font-size: 20px;
+    width: 50%;
+    max-width: 350px;
+    margin-left: 35px;
+  }
+   
+  ul.options li {
+    display: block;
+    background: papayawhip;
+    margin: 10px auto;
+    width: 50%;
+    max-width: 350px;
+  }
+  ul.options li:hover {
+    font-weight: bold;
+    color: #00b4cc;
+    cursor: pointer;
+  }
+
+  .try-write {
+    font-size: 20px;
+    padding: 10px;
+    color: grey;
+    display: block;
+    margin-left: 35px;
+  }

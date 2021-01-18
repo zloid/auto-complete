@@ -23,28 +23,36 @@ const InputField = ({
     }
 
     const NamesFromApi = ({ selectedNamesFromApi }) => {
-        return (
-            <ul>
-                {selectedNamesFromApi.length > 0
-                    ? selectedNamesFromApi.map((name, i) => (
-                          <li
-                              key={name + i}
-                              onClick={() => {
-                                  setInputText(name)
-                                  deleteDataFromApi()
-                              }}
-                          >
-                              {name}
-                          </li>
-                      ))
-                    : 'Try write: Clementin, then click on name'}
+        const listOfNames = selectedNamesFromApi.map((name, i) => (
+            <ul className="options">
+                <li
+                    key={name + i}
+                    onClick={() => {
+                        setInputText(name)
+                        deleteDataFromApi()
+                    }}
+                >
+                    {name}
+                </li>
             </ul>
+        ))
+        return (
+            <div>
+                {selectedNamesFromApi.length > 0 ? (
+                    listOfNames
+                ) : (
+                    <div className="try-write">
+                        Try write: Clementin, then click on name
+                    </div>
+                )}
+            </div>
         )
     }
 
     return (
         <div>
             <input
+                className="search"
                 type="text"
                 value={inputText}
                 onChange={changeInputValue}
